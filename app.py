@@ -9,18 +9,23 @@ socketio = SocketIO(app)
 rooms = {}
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', rooms=rooms)
+
+
+@app.route("/available-rooms")
+def available_rooms():
+    return render_template("available-rooms.html", rooms = rooms)
 
 @app.route('/room/<room_id>')
 def room(room_id):
-    return render_template('room.html', room_id=room_id)
+    print(rooms)
+    return render_template('room.html', room_id=room_id, story=rooms[room_id]['story'])
 
 
 @app.route('/create-room')
 def create_room():
     room_id = str(random.randint(100, 999))
     rooms[room_id] = {'story':[], 'current':0, 'turns':[]}
-    print(rooms)
     return render_template('room-linker.html', room_id=room_id)
 
 

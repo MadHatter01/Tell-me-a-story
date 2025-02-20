@@ -74,7 +74,7 @@
             width: 100%;
             box-sizing: border-box;
         }
-        textarea {
+        input {
             flex: 1;
             padding: 8px;
             border: none;
@@ -88,6 +88,7 @@
             flex-direction: column;
             width: 100%;
         }
+
         
     </style>
 </head>
@@ -106,8 +107,8 @@
 
 
     <div class="input-area">
-        <form id="story-form" hx-post="/{{room_id}}/submit_line" hx-target="#story">
-            <textarea id="line" name="line" placeholder="Add your line..."></textarea>
+        <form id="story-form" hx-post="/{{room_id}}/submit_line" hx-target="#story" hx-on::after-request="this.reset()">
+            <input type="text" id="line" name="line" placeholder="Add your line..." hx-trigger="keyup[key=='Enter']" hx-swap-oob="true"/>
             <button type="submit">Submit Line</button>
         </form>
         
