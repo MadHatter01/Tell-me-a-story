@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Time</title>
+    <title>Room {{room_id}}</title>
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 
     <style>
@@ -16,6 +16,14 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+        }
+        form{
+            display:flex;
+            flex-direction: column;
+        }
+        textarea{
+            padding: 1rem;
+            margin:1rem;
         }
         button{
             background:#5027e5;
@@ -35,8 +43,16 @@
 </head>
 <body>
     <h1>Tell me a story</h1>
-    <button hx-get="/create-room" hx-target="#room-space">Create a room</button>
-    <div id="room-space"></div>
+    <h2>Room {{room_id}} </h2>
+    <div id="story">
 
+    </div>
+    <div>
+        <form id="story-form" hx-post="/submit_line" hx-target="#story">
+            <textarea id="line" name="line" placeholder="Add your line..."></textarea>
+            <button type="submit">Submit Line</button>
+        </form>
+        
+    </div>
 </body>
 </html>
