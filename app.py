@@ -20,14 +20,21 @@ def room(room_id):
 def create_room():
     room_id = str(random.randint(100, 999))
     rooms[room_id] = {'story':[], 'current':0, 'turns':[]}
+    print(rooms)
     return render_template('room-linker.html', room_id=room_id)
 
 
-@app.route('/submit_line', methods=['POST'])
-def submit_line():
+@app.route('/<room_id>/submit_line', methods=['POST'])
+def submit_line(room_id):
     line = request.form.get('line')
-    print(line)
-    return f"<p>{line}</p>"
+  
+    print(line, room_id, rooms)
+    if room_id not in rooms:
+        return jsonify(error="Room not found"), 404
+    
+    rooms[room_id]['story'].append(line)
+
+    return render_template('story.html', story=rooms[room_id]['story'])
 
 if __name__=="__main__":
     socketio.run(app, debug =True)

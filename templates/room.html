@@ -12,19 +12,23 @@
             color:#fff;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
-            min-height: 100vh;
-            justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding:0;
+            margin:0;
         }
-        form{
-            display:flex;
-            flex-direction: column;
+        header{
+            width:100%;
+            background-color: #254ab9;
+            color:white;
+            font-size:2rem;
         }
-        textarea{
-            padding: 1rem;
-            margin:1rem;
+        header h1{
+            font-size:32px;
+            padding:0.1rem 1rem;
+            font-weight: 400;
         }
+ 
         button{
             background:#5027e5;
             color:white;
@@ -39,20 +43,75 @@
             background:#312265;
 
         }
+        .chat-container{
+            width:80%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .story-window{
+            flex:1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .story-window p{
+            font-size: 1rem;
+        }
+        .input-area{
+            display: flex;
+            padding: 12px;
+            background:#ddd;
+            bottom:0;
+            position: absolute;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            resize: none;
+            box-sizing: border-box;
+        }
+        #story-form{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
     </style>
 </head>
 <body>
-    <h1>Tell me a story</h1>
+    <header>
+        <h1>Tell Me A Story</h1>
+    </header>
     <h2>Room {{room_id}} </h2>
-    <div id="story">
-
+    <div class="chat-container">
+        <div id="story" class="story-window" >
+            {% for line in story %}
+                <p>{{line}}</p>
+            {% endfor %}
+        </div>
     </div>
-    <div>
-        <form id="story-form" hx-post="/submit_line" hx-target="#story">
+
+
+    <div class="input-area">
+        <form id="story-form" hx-post="/{{room_id}}/submit_line" hx-target="#story">
             <textarea id="line" name="line" placeholder="Add your line..."></textarea>
             <button type="submit">Submit Line</button>
         </form>
         
     </div>
+  
 </body>
 </html>
