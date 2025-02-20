@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room {{room_id}}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.js"></script>
+
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
 
     <style>
         body{
@@ -92,13 +95,14 @@
         
     </style>
 </head>
-<body>
+<body hx-ext="ws">
     <header>
         <h1>Tell Me A Story</h1>
     </header>
     <h2>Room {{room_id}} </h2>
+    <h2>User: {{username}}</h2>
     <div class="chat-container">
-        <div id="story" class="story-window" >
+        <div id="story" class="story-window"  >
             {% for line in story %}
                 <p>{{line}}</p>
             {% endfor %}
@@ -113,6 +117,14 @@
         </form>
         
     </div>
-  
+    <script>
+       const socket = io();
+       socket.emit("join", {room_id:"{{room_id}}"});
+       
+       socket.on("update_story", (data)=>{
+        let storyDiv = document.getElementById("story");
+        storyDiv.innerHTML = data.story.map(line => `<p>${line}</p>`).join('');
+       })
+    </script>
 </body>
 </html>
