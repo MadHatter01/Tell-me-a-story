@@ -1,7 +1,12 @@
-<ul>
+<form id="username-form" hx-post="/set-username" hx-target="#rooms-list" hx-swap="outerHTML">
+    <input type="text" id="username" name="username" placeholder="Enter your username..." required />
+    <button type="submit">Set Username</button>
+</form>
+
+<ul id="rooms-list">
     {% for room_id in rooms.keys() %}
     <li>
-        <a href="/room/{{room_id}}">Room {{room_id}}</a>
+        <a href="/room/{{ username }}/{{ room_id }}">Room {{ room_id }}</a>
     </li>
     {% endfor %}
 </ul>

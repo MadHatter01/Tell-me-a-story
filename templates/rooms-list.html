@@ -1,0 +1,7 @@
+<ul id="rooms-list">
+    {% for room_id in rooms.keys() %}
+    <li>
+        <a href="/room/{{ username }}/{{ room_id }}">Room {{ room_id }}</a>
+    </li>
+    {% endfor %}
+</ul>

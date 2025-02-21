@@ -16,10 +16,23 @@ def home():
 def available_rooms():
     return render_template("available-rooms.html", rooms = rooms)
 
-# @app.route('/room/<room_id>')
-# def room(room_id):
-#     print('triggered')
-#     return render_template('room.html', room_id=room_id, story=rooms[room_id]['story'])
+@app.route('/set-username', methods=['POST'])
+def set_username():
+    print('username')
+
+    username = request.form.get('username')
+
+    if not username:
+        return "Username is required!", 400
+    return render_template("rooms-list.html", username=username, rooms=rooms)
+
+@app.route('/room/<username>/<room_id>')
+def room(username, room_id):
+    if room_id not in rooms:
+        return "Room not found", 404
+
+    return render_template('room.html', username=username, room_id=room_id, story=rooms[room_id]['story'])
+
 
 @app.route('/room/<room_id>', methods=['POST'])
 def submit_username(room_id):
