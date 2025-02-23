@@ -1,0 +1,14 @@
+<h2>Welcome, {{ username }}!</h2>
+<form hx-post="/create-room" hx-target="#room-section" hx-swap="outerHTML">
+    <button type="submit">Create a Room</button>
+</form>
+
+<div id="room-section">
+    <ul>
+        {% for room_id in rooms.keys() %}
+        <li>
+            <a href="/room/{{ username }}/{{ room_id }}">Room {{ room_id }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

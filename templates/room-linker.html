@@ -1,5 +1,3 @@
-<p>Room created! Join using the link below:</p>
-<form id="username-form" method="POST" action="/room/{{ room_id }}">
-    <input type="text" id="username" name="username" placeholder="Enter your username..." required />
-    <button type="submit">Join Room</button>
-</form>
+<h3>Room Created!</h3>
+<p>Join using the link below:</p>
+<a href="/room/{{ username }}/{{ room_id }}">Go to Room: {{ room_id }}</a>

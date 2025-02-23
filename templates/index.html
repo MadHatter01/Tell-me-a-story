@@ -42,10 +42,15 @@
 </head>
 <body>
     <h1>Tell me a story</h1>
-    <button hx-get="/create-room" hx-target="#room-space" hx-swap="innerHTML">Create a room</button>
-    <div id="room-space" hx-get="/available-rooms" hx-trigger="load" hx-swap="innerHTML">
-        Loading rooms...
+    <div id="username-section">
+        <form id="username-form" hx-post="/set-username" hx-target="#main-content" hx-swap="outerHTML">
+            <input type="text" id="username" name="username" placeholder="Enter your username..." required />
+            <button type="submit">Set Username</button>
+        </form>
     </div>
+    <div id="main-content"></div>
+
+
 
   
 

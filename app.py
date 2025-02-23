@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 import random
 
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+app.secret_key = "secret"
+
 
 rooms = {}
 @app.route('/')
@@ -12,19 +14,17 @@ def home():
     return render_template('index.html', rooms=rooms)
 
 
-@app.route("/available-rooms")
-def available_rooms():
-    return render_template("available-rooms.html", rooms = rooms)
 
 @app.route('/set-username', methods=['POST'])
 def set_username():
     print('username')
 
     username = request.form.get('username')
+    session['username'] = username
 
     if not username:
         return "Username is required!", 400
-    return render_template("rooms-list.html", username=username, rooms=rooms)
+    return render_template("main-content.html", username=username, rooms=rooms)
 
 @app.route('/room/<username>/<room_id>')
 def room(username, room_id):
@@ -42,11 +42,11 @@ def submit_username(room_id):
         return jsonify(error="Room not found"), 404
     return render_template('room.html', username=username, room_id=room_id, story=rooms[room_id]['story'])
 
-@app.route('/create-room')
+@app.route('/create-room', methods=['POST'])
 def create_room():
     room_id = str(random.randint(100, 999))
     rooms[room_id] = {'story':[]}
-    return render_template('room-linker.html', room_id=room_id)
+    return render_template('room-linker.html', room_id=room_id, username =session['username'] )
 
 
 @app.route('/<room_id>/submit_line', methods=['POST'])
