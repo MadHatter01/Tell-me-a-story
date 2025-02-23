@@ -119,7 +119,9 @@
     </div>
     <script>
        const socket = io();
-       socket.emit("join", {room_id:"{{room_id}}"});
+       const username = "{{username}}";
+       const room_id = "{{room_id}}";
+       socket.emit("join", {room_id:room_id, username:username});
        
        socket.on("update_story", (data)=>{
         let storyDiv = document.getElementById("story");

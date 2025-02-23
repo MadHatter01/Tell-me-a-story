@@ -45,7 +45,7 @@ def submit_username(room_id):
 @app.route('/create-room', methods=['POST'])
 def create_room():
     room_id = str(random.randint(100, 999))
-    rooms[room_id] = {'story':[]}
+    rooms[room_id] = {'story':[], 'users':[]}
     return render_template('room-linker.html', room_id=room_id, username =session['username'] )
 
 
@@ -72,8 +72,16 @@ def handle_disconnect():
 @socketio.on('join')
 def handle_join(data):
     room_id = data['room_id']
+    username = data['username']
+    if room_id not in rooms:
+        return
+    
     join_room(room_id)
-    print(f"user has joined room {room_id}")
+    if username not in rooms[room_id]['users']:
+        rooms[room_id]['users'].append(username)
+
+
+    print(f"{username} has joined room {room_id}")
 
 
 if __name__=="__main__":
