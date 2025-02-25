@@ -101,6 +101,7 @@
     </header>
     <h2>Room {{room_id}} </h2>
     <h2>User: {{username}}</h2>
+    <ul id="user-list"></ul> 
     <div class="chat-container">
         <div id="story" class="story-window"  >
             {% for line in story %}
@@ -123,6 +124,11 @@
        const room_id = "{{room_id}}";
        socket.emit("join", {room_id:room_id, username:username});
        
+       socket.on("update_users", function (data) {
+        let userList = document.getElementById("user-list");
+        userList.innerHTML = data.users.map(user => `<li>${user}</li>`).join('');
+    });
+
        socket.on("update_story", (data)=>{
         let storyDiv = document.getElementById("story");
         storyDiv.innerHTML = data.story.map(line => `<p>${line}</p>`).join('');

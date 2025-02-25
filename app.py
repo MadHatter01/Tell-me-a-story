@@ -82,6 +82,9 @@ def handle_join(data):
 
 
     print(f"{username} has joined room {room_id}")
+    socketio.emit('update_users', {
+        'users':rooms[room_id]['users']
+    }, room=room_id)
 
 
 if __name__=="__main__":
