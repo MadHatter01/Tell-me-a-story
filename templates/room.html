@@ -101,6 +101,8 @@
     </header>
     <h2>Room {{room_id}} </h2>
     <h2>User: {{username}}</h2>
+    <h3>Current Turn: <span id="current-turn">Waiting...</span></h3>
+
     <ul id="user-list"></ul> 
     <div class="chat-container">
         <div id="story" class="story-window"  >
@@ -114,7 +116,7 @@
     <div class="input-area">
         <form id="story-form" hx-post="/{{username}}/{{room_id}}/submit_line" hx-target="#story" hx-on::after-request="this.reset()">
             <input type="text" id="line" name="line" placeholder="Add your line..." hx-trigger="keyup[key=='Enter']" hx-swap-oob="true"/>
-            <button type="submit">Submit Line</button>
+            <button type="submit" id="linesubmit">Submit Line</button>
         </form>
         
     </div>
@@ -128,6 +130,13 @@
         let userList = document.getElementById("user-list");
         userList.innerHTML = data.users.map(user => `<li>${user}</li>`).join('');
     });
+
+    socket.on("turn_update", (data)=>{
+        document.getElementById('current-turn').textContent = data.active_user;
+        let isMyTurn = data.active_user === username;
+        document.getElementById("line").disabled = !isMyTurn;
+        document.getElementById("linesubmit").disabled = !isMyTurn;
+    })
 
        socket.on("update_story", (data)=>{
         let storyDiv = document.getElementById("story");
