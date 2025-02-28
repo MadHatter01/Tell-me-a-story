@@ -110,6 +110,10 @@ def handle_join(data):
         'active_user':rooms[room_id]['users'][rooms[room_id]['currentTurn']]
     }, room=room_id)
 
+    socketio.emit('turn_update', {
+        'active_user': rooms[room_id]['users'][rooms[room_id]['currentTurn']]
+    }, room=room_id)
+
 
 if __name__=="__main__":
     socketio.run(app, debug =True)
