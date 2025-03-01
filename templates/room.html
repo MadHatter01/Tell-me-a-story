@@ -127,11 +127,14 @@
     <div class="metainfo">
         <h2>Room {{room_id}} </h2>
         <h2>User: {{username}}</h2>
-        <h2>Current Turn: <span id="current-turn">Waiting...</span></h2>
+        <h2>Current Turn: <span id="current-turn">Waiting...</span><span id="timer">( 5s )</span></h2>
     </div>
 
     <div class="users">
         <ul id="user-list"></ul> 
+    </div>
+    <div>
+        
     </div>
     
     <div class="chat-container">
@@ -144,7 +147,7 @@
 
 
     <div class="input-area">
-        <form id="story-form" hx-post="/{{username}}/{{room_id}}/submit_line" hx-target="#story" hx-on::after-request="this.reset()">
+        <form id="story-form" hx-post="/{{username}}/{{room_id}}/submit_line" hx-target="#story" hx-swap="none" hx-on::after-request="this.reset()">
             <input type="text" id="line" name="line" placeholder="Add your line..." hx-trigger="keyup[key=='Enter']" hx-swap-oob="true"/>
             <button type="submit" id="linesubmit">Submit Line</button>
         </form>
@@ -154,17 +157,52 @@
        const socket = io();
        const username = "{{username}}";
        const room_id = "{{room_id}}";
+       const inputField = document.getElementById("line");
+       const submitBtn = document.getElementById("linesubmit");
+       const storyForm = document.getElementById("story-form");
+       const timerElement = document.getElementById("timer"); 
+       let timeout;
        socket.emit("join", {room_id:room_id, username:username});
        
        socket.on("update_users", function (data) {
         let userList = document.getElementById("user-list");
-        console.log(data)
         userList.innerHTML = data.users.map(user => `<li>${user}</li>`).join('');
     });
+ 
 
     socket.on("turn_update", (data)=>{
         document.getElementById('current-turn').textContent = data.active_user;
         let isMyTurn = data.active_user === username;
+        inputField.disabled = !isMyTurn;
+        submitBtn.disabled = !isMyTurn;
+
+        clearTimeout(timeout);
+        if (isMyTurn) {
+            let timeLeft = 5;
+            timerElement.textContent = `(${timeLeft}s)`;
+            const countdown = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    return;
+                }
+                timerElement.textContent = ` (${timeLeft}s)`;
+                timeLeft--;
+            }, 1000);
+
+            timeout = setTimeout(() => {
+                if (!inputField.value.trim()) {
+                    storyForm.requestSubmit(); 
+                }
+                clearInterval(countdown);
+                timerElement.textContent = "";
+            }, 5000);
+            inputField.addEventListener("input", () => {
+                if(timeout) clearTimeout(timeout)
+                clearInterval(countdown);
+                timerElement.textContent = "";
+            }, { once: true });
+        }
+    
         document.getElementById("line").disabled = !isMyTurn;
         document.getElementById("linesubmit").disabled = !isMyTurn;
     })

@@ -76,7 +76,7 @@ def submit_line(username, room_id):
     print(line, room_id, rooms)
     if room_id not in rooms:
         return jsonify(error="Room not found"), 404
-    
+    print(line)
     rooms[room_id]['story'].append(f"{username}: {line}")
     next_turn(room_id)
 
