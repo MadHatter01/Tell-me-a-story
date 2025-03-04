@@ -3,6 +3,9 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 import random
 import uuid
 import time
+from faker import Faker
+
+fake = Faker()
 
 
 
@@ -25,13 +28,12 @@ def next_turn(room_id):
 
 @app.route('/')
 def home():
-    return render_template('index.html', rooms=rooms)
+    return render_template('index.html', rooms=rooms, randomname = fake.name())
 
 
 
 @app.route('/set-username', methods=['POST'])
 def set_username():
-    print('username')
 
     username = request.form.get('username')
     session['username'] = username

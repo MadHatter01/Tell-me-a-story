@@ -44,7 +44,7 @@
     <h1>Tell me a story</h1>
     <div id="username-section">
         <form id="username-form" hx-post="/set-username" hx-target="#main-content" hx-swap="outerHTML">
-            <input type="text" id="username" name="username" placeholder="Enter your username..." required />
+            <input type="text" id="username" name="username" value={{randomname}} placeholder="Enter your username..." required />
             <button type="submit">Set Username</button>
         </form>
     </div>
