@@ -19,6 +19,7 @@
             flex-direction: column;
             padding:0;
             margin:0;
+            height:100vh;
         }
         header{
             width:100%;
@@ -55,10 +56,15 @@
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
             overflow: hidden;
             position: relative;
+            flex-grow: 1;
         }
 
         .story-window{
-            flex:1;
+            flex-grow:1;
+            overflow-y: auto;
+            max-height: 80%;
+            width: 100%;
+            justify-content: flex-start;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -70,6 +76,7 @@
             margin:0;
         }
         .input-area{
+            position: sticky;
             display: flex;
             padding: 12px;
             background:#ddd;
@@ -154,6 +161,8 @@
         
     </div>
     <script>
+        const conjunctions = ["and", "but", "nor", "or", "so", "because", "although", "however", "meanwhile", "therefore"];
+
        const socket = io();
        const username = "{{username}}";
        const room_id = "{{room_id}}";
@@ -191,6 +200,8 @@
 
             timeout = setTimeout(() => {
                 if (!inputField.value.trim()) {
+                    const randomWord = conjunctions[Math.floor(Math.random()* conjunctions.length)]
+                    inputField.value = randomWord;
                     storyForm.requestSubmit(); 
                 }
                 clearInterval(countdown);
@@ -210,6 +221,9 @@
        socket.on("update_story", (data)=>{
         let storyDiv = document.getElementById("story");
         storyDiv.innerHTML = data.story.map(line => `<p>${line}</p>`).join('');
+        setTimeout(() => {
+        storyDiv.scrollTop = storyDiv.scrollHeight;
+    }, 100);
        })
     </script>
 </body>
