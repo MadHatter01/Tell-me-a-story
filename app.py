@@ -43,12 +43,12 @@ def set_username():
         return "Username is required!", 400
     return render_template("main-content.html", username=username, rooms=rooms)
 
-@app.route('/room/<username>/<room_id>')
-def room(username, room_id):
+@app.route('/room/<genre>/<username>/<room_id>')
+def room(username, room_id, genre):
     if room_id not in rooms:
         return "Room not found", 404
 
-    return render_template('room.html', username=username, room_id=room_id, story=rooms[room_id]['story'])
+    return render_template('room.html', username=username, room_id=room_id, story=rooms[room_id]['story'], genre=genre)
 
 
 @app.route('/room/<room_id>', methods=['POST'])
@@ -63,7 +63,9 @@ def submit_username(room_id):
 def create_room():
     room_id = str(random.randint(100, 999))
     rooms[room_id] = {'story':[], 'users':[], 'currentTurn':0}
-    return render_template('room-linker.html', room_id=room_id, username =session['username'] )
+    genres = ['comedy', 'drama', 'horror', 'romantic', 'medieval', 'tragedy']
+
+    return render_template('room-linker.html', room_id=room_id, username =session['username'], genre=random.choice(genres) )
 
 
 @app.route('/<username>/<room_id>/submit_line', methods=['POST'])

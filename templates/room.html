@@ -123,13 +123,17 @@
             padding: 0 1rem ;
             font-size: 1.2rem;
         }
+        #genre{
+            font-size: 1rem;
+            font-weight: bold;
+        }
 
 
     </style>
 </head>
 <body hx-ext="ws">
     <header>
-        <h1>Tell Me A Story</h1>
+        <h1>Tell Me A Story <span id="genre"> {{genre}}</span></h1>
     </header>
     <div class="metainfo">
         <h2>Room {{room_id}} </h2>
@@ -161,9 +165,8 @@
         
     </div>
     <script>
-        const conjunctions = ["and", "but", "nor", "or", "so", "because", "although", "however", "meanwhile", "therefore"];
-
-       const socket = io();
+    const conjunctions = ["and", "but", "nor", "or", "so", "because", "although", "however", "meanwhile", "therefore"];
+    const socket = io();
        const username = "{{username}}";
        const room_id = "{{room_id}}";
        const inputField = document.getElementById("line");
@@ -171,6 +174,7 @@
        const storyForm = document.getElementById("story-form");
        const timerElement = document.getElementById("timer"); 
        let timeout;
+
        socket.emit("join", {room_id:room_id, username:username});
        
        socket.on("update_users", function (data) {
